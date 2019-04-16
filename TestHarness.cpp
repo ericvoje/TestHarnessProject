@@ -3,30 +3,41 @@
 #include <iostream>
 
 #include "TestHarness.h"
+#include "Logger.h"
 
 // Execute the function under test and report the results
-bool TestHarness::execute()
+bool TestHarness::execute(bool (*func)())
 {
-
+	// Run the function within a safe try/catch block
 	try {
-		int ret = fcnPtr(argument1, argument2);
-		if (ret == expResp)
+		bool ret = func();
+		
+		if (ret == true) {
+			// Test Passed
+			logger.logMessage(log_min, "Test Passed");
 			return true;
-		else
+		} else {
+			// Test Failed
+			logger.logMessage(log_min, "Test Failed");
 			return false;
+		}
 	}
 	catch (const char* msg) {
-		//std::cout << "Exception " << e << "occurred. Test failed.\n";
-		std::cerr << msg << "\n"; 
+		// Caught an exception
+		std::cerr << msg; 
 	}
 	return false;
 }
 
-// Create a new TestHarness object by providing a function pointer
-TestHarness::TestHarness(int (*func)(int, int), int arg1, int arg2, int rc)
+// Destructor
+// Remove Logger
+TestHarness::~TestHarness()
 {
-	fcnPtr = func;
-	argument1 = arg1;
-	argument2 = arg2;
-	expResp = rc;
+	//delete logger;
+}
+
+// Create a new TestHarness object by providing a function pointer
+TestHarness::TestHarness(LogLevel logLevel)
+{
+	logger = Logger(logLevel);
 }
