@@ -1,4 +1,4 @@
-#pragma once
+
 
 #ifndef LOGGER_H
 #define LOGGER_H
@@ -8,24 +8,27 @@
 // Possible logging levels
 enum LogLevel { log_min, log_med, log_verbose};
 
-// Class that handles logging messages.
-// Can set the log level to allow user to change
-// the level of detail that is printed in the logs.
-class Logger {
+namespace Logger
+{
 
-private:
-	LogLevel level;
+	// Class that handles logging messages.
+	// Can set the log level to allow user to change
+	// the level of detail that is printed in the logs.
+	class Log {
 
-public:
-	LogLevel getLogLevel();
-	void setLogLevel(LogLevel setLevel);
-	void logMessage(LogLevel minLvl, std::string s);
+	private:
+		LogLevel level;
 
-	// Constructor
-	Logger();
-	Logger(LogLevel logLevel);
-	~Logger();
+	public:
+		LogLevel getLogLevel();
+		void setLogLevel(LogLevel setLevel);
+		void logMessage(LogLevel minLvl, std::string s);
 
-};
+		// Constructor
+		Log();
+		Log(LogLevel logLevel);
+		~Log();
 
+	};
+}
 #endif

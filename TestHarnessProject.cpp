@@ -32,33 +32,34 @@ bool foo2()
 // Run the TestHarnessProject executable
 int main()
 {
-    std::cout << "Hello World!\n";
+	// TestHarness will execute our functions in a controlled environment
+	TestHarness::Harness toTest = TestHarness::Harness(log_verbose);
 
-	// Create array of TestHarness objects to iterate through
-	//std::vector<TestHarness> toTest;
+	//toTest.execute(foo);
+	//toTest.execute(bar);
+	//toTest.execute(foo2);
 
-	// Populate our list of functions to test
-	//toTest.push_back(TestHarness(foo, 5, 4, 5));
-	//toTest.push_back(TestHarness(bar, 5, 4, 4));
-	//toTest.push_back(TestHarness(foo2, 5, 4, 5));
+	TestHarness::testFunc function1;
+	function1.func = foo;
 
-	// Iterate through our TestHarness objects and execute them
-	/*for(std::vector<TestHarness>::iterator it = toTest.begin(); it != toTest.end(); ++it)
-	{
-		bool result = it->execute();
-		if (result)
-			std::cout << "Test Passed\n";
-		else
-			std::cout << "Test Failed\n";
+	TestHarness::testFunc function2;
+	function2.func = bar;
 
-	}*/
+	TestHarness::testFunc function3;
+	function3.func = foo2;
 
-	TestHarness toTest = TestHarness(log_verbose);
+	TestHarness::testFunc function4;
+	function4.func = foo;
 
-	toTest.execute(foo);
-	toTest.execute(bar);
-	toTest.execute(foo2);
+	// Create vector of testFunc types to pass in functions as a list
+	std::vector<TestHarness::testFunc> funcVector;
 
+	funcVector.push_back(function1);
+	funcVector.push_back(function2);
+	funcVector.push_back(function3);
+	funcVector.push_back(function4);
+
+	toTest.execute(funcVector);
 
 	exit(0);
 
