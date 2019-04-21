@@ -1,5 +1,14 @@
-// TestHarnessProject.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+/////////////////////////////////////////////////////////////////////
+// TestHarnessProject.cpp - Main entry point for project. Example  //
+//              code demonstrating major functionality of the      //
+//              Test Harness Project                               //
+// ver 1.0                                                         //
+// Language:    C++, Visual Studio 2019                            //
+// Application: Test Harness - Project 1,                          //
+//              CSE687 - Object Oriented Design                    //
+// Author:      Eric Voje, Kuohsun Tsai                            //
+//              ervoje@syr.edu, kutsai@syr.edu                     //
+/////////////////////////////////////////////////////////////////////
 
 #include <iostream>
 #include <vector>
@@ -7,7 +16,7 @@
 #include "TestHarness.h"
 #include "Logger.h"
 
-#define TESTSIZE 10
+#define TESTSIZE 10;
 
 // Return true
 bool foo()
@@ -35,10 +44,13 @@ int main()
 	// TestHarness will execute our functions in a controlled environment
 	TestHarness::Harness toTest = TestHarness::Harness(log_verbose);
 
-	//toTest.execute(foo);
-	//toTest.execute(bar);
-	//toTest.execute(foo2);
+	// Functions can be executed by passing their function pointer
+	// into the execute function itself
+	toTest.execute(foo);
+	toTest.execute(bar);
+	toTest.execute(foo2);
 
+	// Or functions can be tested in a list by creating TestFunc objects
 	TestHarness::TestFunc function1;
 	function1.func = foo;
 
@@ -47,11 +59,15 @@ int main()
 
 	TestHarness::TestFunc function3;
 	function3.func = foo2;
+	function3.failMsg = "Function 3 is bad.";
+	function3.passMsg = "This function is perfect!";
 
 	TestHarness::TestFunc function4;
 	function4.func = foo;
+	function4.failMsg = "Function 4 is bad.";
+	function4.passMsg = "This function is perfect!";
 
-	// Create vector of testFunc types to pass in functions as a list
+	// Create vector of TestFunc objects to pass in functions as a list
 	std::vector<TestHarness::TestFunc> funcVector;
 
 	funcVector.push_back(function1);
@@ -59,10 +75,10 @@ int main()
 	funcVector.push_back(function3);
 	funcVector.push_back(function4);
 
+	// Pass the entire vector into the execute function to execute the tests in order
 	toTest.execute(funcVector);
 
 	exit(0);
-
 }
 
 

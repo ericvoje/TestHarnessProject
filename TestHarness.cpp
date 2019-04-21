@@ -1,3 +1,13 @@
+/////////////////////////////////////////////////////////////////////
+// TestHarness.cpp - Handler for executing function tests          //
+// ver 1.0                                                         //
+// Language:    C++, Visual Studio 2019                            //
+// Application: Test Harness - Project 1,                          //
+//              CSE687 - Object Oriented Design                    //
+// Author:      Eric Voje, Kuohsun Tsai                            //
+//              ervoje@syr.edu, kutsai@syr.edu                     //
+/////////////////////////////////////////////////////////////////////
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -8,22 +18,35 @@
 
 namespace TestHarness {
 
-
 	// Execute the function under test and report the results
 	bool Harness::execute(bool (*func)())
 	{
+		TestFunc test;
+		test.func = func;
+		return execute(test);
+	}
+
+	// Call execute from testFunc type
+	bool Harness::execute(TestFunc toTest) {
+
+		logger.logMessage(log_med, "Running Test " + std::to_string(++nTests));
+
 		// Run the function within a safe try/catch block
 		try {
-			bool ret = func();
+			bool ret = toTest.func();
 
 			if (ret == true) {
 				// Test Passed
-				logger.logMessage(log_min, "Test Passed");
+				logger.logMessage(log_min, "Test " + std::to_string(nTests) + " Passed");
+				if(!toTest.passMsg.empty())
+					logger.logMessage(log_med, toTest.passMsg);
 				return true;
 			}
 			else {
 				// Test Failed
-				logger.logMessage(log_min, "Test Failed");
+				logger.logMessage(log_min, "Test " + std::to_string(nTests)+ " Failed");
+				if (!toTest.failMsg.empty())
+					logger.logMessage(log_med, toTest.failMsg);
 				return false;
 			}
 		}
@@ -31,14 +54,11 @@ namespace TestHarness {
 			// Caught an exception
 			std::cerr << msg;
 			logger.logMessage(log_min, "Exception Thrown!");
-			logger.logMessage(log_min, "Test Failed");
+			logger.logMessage(log_min, "Test " + std::to_string(nTests) + " Failed");
+			if (!toTest.failMsg.empty())
+				logger.logMessage(log_med, toTest.failMsg);
 		}
 		return false;
-	}
-
-	// Call execute from testFunc type
-	bool Harness::execute(TestFunc func) {
-		return execute(func.func);
 	}
 
 	// Call execute from testFunc Vector
@@ -51,7 +71,7 @@ namespace TestHarness {
 		for(std::vector<TestFunc>::iterator it = funcVector.begin(); it != funcVector.end(); ++it)
 		{
 			logger.logMessage(log_verbose, "Function number " + std::to_string(++nFunc) + " executing.");
-			result = execute(it->func) && result;
+			result = execute(*it) && result;
 		}
 
 		return result;

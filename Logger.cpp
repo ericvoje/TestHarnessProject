@@ -1,3 +1,13 @@
+/////////////////////////////////////////////////////////////////////
+// Logger.cpp - print log messages, filtered by log level          //
+// ver 1.0                                                         //
+// Language:    C++, Visual Studio 2019                            //
+// Application: Test Harness - Project 1,                          //
+//              CSE687 - Object Oriented Design                    //
+// Author:      Eric Voje, Kuohsun Tsai                            //
+//              ervoje@syr.edu, kutsai@syr.edu                     //
+/////////////////////////////////////////////////////////////////////
+
 #include <iostream>
 #include <string>
 #include <chrono> 
@@ -5,11 +15,9 @@
 
 #include "Logger.h"
 
-
 namespace Logger {
 
-
-	// Returns the LogLevel of our Logger instance
+	// Returns the LogLevel of our Log instance
 	LogLevel Log::getLogLevel()
 	{
 		return level;
@@ -29,13 +37,22 @@ namespace Logger {
 	// Function that only prints log messages that are allowed at our current LogLevel
 	void Log::logMessage(LogLevel minLvl, std::string s)
 	{
-		// Print timestamp if log_verbose level is set
+		// Always print timestamp if log_verbose level is set
 		if (level == log_verbose) {
-			//char str[26];
-			//std::time_t result = std::time(nullptr);
-			//std::cout << "[" << ctime_s(str, sizeof str, &result) << "] ";
-			std::cout << "[" << "time" << "] ";
+
+			time_t rawtime;
+			struct tm timeinfo;
+			char buffer[80];
+
+			time(&rawtime);
+			localtime_s(&timeinfo, &rawtime);
+
+			strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
+			std::string str(buffer);
+
+			std::cout << "[" << str << "] ";
 		}
+
 		// Only print values that are at or less than
 		// our current LogLevel
 		if (level >= minLvl) {
@@ -43,7 +60,7 @@ namespace Logger {
 		}
 	}
 
-	//
+	// Generic Log creator
 	Log::Log()
 	{
 		this->level = log_min;
@@ -56,6 +73,7 @@ namespace Logger {
 		this->setLogLevel(logLevel);
 	}
 
+	// Delete Log type
 	Log::~Log()
 	{
 
