@@ -37,18 +37,18 @@ namespace TestHarness {
 	}
 
 	// Call execute from testFunc type
-	bool Harness::execute(testFunc func) {
+	bool Harness::execute(TestFunc func) {
 		return execute(func.func);
 	}
 
 	// Call execute from testFunc Vector
-	bool Harness::execute(std::vector<testFunc> funcVector) {
+	bool Harness::execute(std::vector<TestFunc> funcVector) {
 
 		int nFunc = 0;
 		bool result = true;
 
 		// Iterate through our TestHarness objects and execute them
-		for(std::vector<testFunc>::iterator it = funcVector.begin(); it != funcVector.end(); ++it)
+		for(std::vector<TestFunc>::iterator it = funcVector.begin(); it != funcVector.end(); ++it)
 		{
 			logger.logMessage(log_verbose, "Function number " + std::to_string(++nFunc) + " executing.");
 			result = execute(it->func) && result;

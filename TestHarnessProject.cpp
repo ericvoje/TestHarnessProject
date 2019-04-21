@@ -39,20 +39,20 @@ int main()
 	//toTest.execute(bar);
 	//toTest.execute(foo2);
 
-	TestHarness::testFunc function1;
+	TestHarness::TestFunc function1;
 	function1.func = foo;
 
-	TestHarness::testFunc function2;
+	TestHarness::TestFunc function2;
 	function2.func = bar;
 
-	TestHarness::testFunc function3;
+	TestHarness::TestFunc function3;
 	function3.func = foo2;
 
-	TestHarness::testFunc function4;
+	TestHarness::TestFunc function4;
 	function4.func = foo;
 
 	// Create vector of testFunc types to pass in functions as a list
-	std::vector<TestHarness::testFunc> funcVector;
+	std::vector<TestHarness::TestFunc> funcVector;
 
 	funcVector.push_back(function1);
 	funcVector.push_back(function2);

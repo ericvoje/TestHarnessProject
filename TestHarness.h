@@ -8,7 +8,7 @@
 
 namespace TestHarness {
 
-	class testFunc {
+	class TestFunc {
 	public:
 		bool (*func)();
 	};
@@ -21,8 +21,8 @@ namespace TestHarness {
 
 	public:
 		bool execute(bool (*func)());
-		bool execute(testFunc func);
-		bool execute(std::vector<testFunc> funcVector);
+		bool execute(TestFunc func);
+		bool execute(std::vector<TestFunc> funcVector);
 
 		Harness(LogLevel logLevel);
 		~Harness();
