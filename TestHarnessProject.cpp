@@ -16,8 +16,6 @@
 #include "TestHarness.h"
 #include "Logger.h"
 
-#define TESTSIZE 10;
-
 // Return true
 bool foo()
 {
