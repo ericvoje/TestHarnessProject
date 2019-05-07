@@ -22,6 +22,12 @@ Executor::Executor(Logger::Log log)
 	//this->log = log;
 }
 
+// Default constructor
+Executor::Executor()
+{
+
+}
+
 // Destructor
 Executor::~Executor()
 {

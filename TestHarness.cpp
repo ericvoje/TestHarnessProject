@@ -27,7 +27,7 @@ using namespace TestHarness;
 // Execute the functions under test
 bool Harness::execute()
 {
-
+	return driver.test();
 }
 
 
@@ -36,6 +36,18 @@ bool Harness::execute()
 Harness::~Harness()
 {
 	//delete logger;
+}
+
+// XML Parser, generates TestedCode objects
+void Harness::parseTestXML(std::string xml)
+{
+	// Read XML string and genrate TestedCode object,
+	// then add TestedCode to TestDriver object
+
+	// ToDo: Create TestedCode object from XML
+	TestedCode t;
+
+	this->driver.addTest(t);
 }
 
 // Create a new TestHarness object by providing a function pointer
@@ -59,6 +71,13 @@ TestedCode::TestedCode(int (*func)())
 	this->failMsg = "";
 }
 
+// Default constructor
+TestedCode::TestedCode()
+{
+
+}
+
+// Default destructor
 TestedCode::~TestedCode()
 {
 	// ToDo
@@ -77,6 +96,12 @@ TestDriver::TestDriver(int (*func)())
 	this->toTest.push_back(*t);
 }
 
+// Create empty TestDriver object
+TestDriver::TestDriver()
+{
+
+}
+
 // Deconstructor
 TestDriver::~TestDriver()
 {
@@ -91,10 +116,5 @@ TestDriver::~TestDriver()
 bool TestDriver::test() {
 
 	// Execute test functions 
-	bool rv = false;
-	
-	rv = executor.execute(toTest);
-
-
-	return rv;
+	return executor.execute(toTest);
 }

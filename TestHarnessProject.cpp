@@ -81,6 +81,14 @@ int main()
 
 */
 
+
+	// Read XML from file
+
+	// Parse XML
+
+	// Execute test
+
+
 	std::cout << "This doesn't work yet." << std::endl;
 
 	exit(0);

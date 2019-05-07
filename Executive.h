@@ -31,6 +31,7 @@ namespace Executive {
 	class Executor {
 	public:
 		Executor(Logger::Log log);
+		Executor::Executor();
 		~Executor();
 
 		bool execute(std::vector<TestHarness::TestedCode> tv);

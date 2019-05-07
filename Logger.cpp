@@ -17,7 +17,6 @@
 
 using namespace Logger;
 
-
 // Returns the LogLevel of our Log instance
 LogLevel Log::getLogLevel()
 {
@@ -61,16 +60,15 @@ void Log::logMessage(LogLevel minLvl, std::string s)
 	}
 }
 
-// Generic Log creator
+// Default Log constructor
 Log::Log()
 {
-	Log::Log(log_min);
+	this->setLogLevel(log_verbose);
 }
 
 // Creates a new Logger with the given LogLevel
 Log::Log(LogLevel logLevel)
 {
-	this->level = log_min;
 	this->setLogLevel(logLevel);
 }
 

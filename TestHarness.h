@@ -36,6 +36,7 @@ namespace TestHarness {
 	class TestedCode {
 	public:
 		TestedCode(int (*func)());
+		TestedCode();
 		~TestedCode();
 
 		std::string passMsg;
@@ -51,9 +52,10 @@ namespace TestHarness {
 
 		// Constructor and Destructor
 		TestDriver(int (*func)());
+		TestDriver();
 		~TestDriver();
 
-		void addTest(TestDriver t)
+		void addTest(TestedCode t)
 		{
 			toTest.push_back(t);
 		}
@@ -72,17 +74,17 @@ namespace TestHarness {
 	// Object that contains all of the information to execute our function under test
 	class Harness {
 	public:
-		//bool execute(bool (*func)());
-		//bool execute(TestFunc func);
-		//bool execute(std::vector<TestFunc> funcVector);
 		
 		bool execute();
+
+		void parseTestXML(std::string xml);
 
 		// Constructors
 		Harness(LogLevel logLevel);
 		~Harness();
 
 	private:
+		TestDriver driver; 
 		Logger::Log logger;
 		int nTests = 0;
 	};
