@@ -2,9 +2,9 @@
 // TestHarnessProject.cpp - Main entry point for project. Example  //
 //              code demonstrating major functionality of the      //
 //              Test Harness Project                               //
-// ver 1.0                                                         //
+// ver 2.0                                                         //
 // Language:    C++, Visual Studio 2019                            //
-// Application: Test Harness - Project 1,                          //
+// Application: Test Harness - Project 2,                          //
 //              CSE687 - Object Oriented Design                    //
 // Author:      Eric Voje, Kuohsun Tsai                            //
 //              ervoje@syr.edu, kutsai@syr.edu                     //
@@ -39,6 +39,9 @@ bool foo2()
 // Run the TestHarnessProject executable
 int main()
 {
+
+/* Old Code
+	
 	// TestHarness will execute our functions in a controlled environment
 	TestHarness::Harness toTest = TestHarness::Harness(log_verbose);
 
@@ -75,6 +78,10 @@ int main()
 
 	// Pass the entire vector into the execute function to execute the tests in order
 	toTest.execute(funcVector);
+
+*/
+
+	std::cout << "This doesn't work yet." << std::endl;
 
 	exit(0);
 }
