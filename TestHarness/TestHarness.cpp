@@ -84,8 +84,8 @@ void Harness::parseTestXML(std::string path)
 		{
 			if (line.substr(line.find("<"), line.find(">"))._Equal("/TestRequest"))
 			{
-				TestedCode t();
-				_testDriver->addTest(t);
+				//TestedCode t();
+				//_testDriver->addTest(t);
 
 				testfound = false;
 				exefound = false;
