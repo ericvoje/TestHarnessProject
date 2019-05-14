@@ -15,8 +15,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TestHarnessProject.cpp">
+    <ClCompile Include="TestHarness.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Logger\Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Executive\Executive.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Executive\TestDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestHarness.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Logger\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Executive\Executive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Executive\ITest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Executive\TestDriver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
