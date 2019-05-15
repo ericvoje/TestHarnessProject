@@ -9,7 +9,7 @@
 /////////////////////////////////////////////////////////////////////
 
 #include <iostream>
-
+#include <fstream>
 #include "TestHarness.h"
 #include "..\Logger\Logger.h"
 #include "..\Executive\Executive.h"
@@ -18,8 +18,7 @@
 
 using namespace TestHarness;
 using namespace Executive;
-using namespace Logger;
-using namespace std;
+using namespace Logging;
 
 /////////////////////////////////////////////////////////////////////
 //
@@ -30,33 +29,33 @@ using namespace std;
 // Execute any tests held by this harness
 bool Harness::execute()
 {
-	_log.logMessage(_ll, "Executing tests.");
+	_log.write("Executing tests.");
 	bool result = _testDriver->execute();
-	_log.logMessage(_ll, "Execution completed.");
+	_log.write("Execution completed.");
 	return result;
 }
 
 // Parse XML file for test instructions
 void Harness::parseTestXML(std::string path)
 {
-	ifstream file(path);
-	string line;
+	std::ifstream fp(path, std::ifstream::in);
+	std::string line;
 
 	// Open file
-	if (!file.is_open())
+	if (!fp.is_open())
 	{
 		// Open failed
-		_log.logMessage(log_med, "Failed to open file at: " + path);
+		_log.write("Failed to open file at: " + path);
 		return;
 	}
 
 	// Read XML file
 	bool testfound = false;
 	bool exefound = false;
-	string testfile = "";
-	string libpath = "";
+	std::string testfile = "";
+	std::string libpath = "";
 
-	while (getline(file, line))
+	while (std::getline(fp, line))
 	{
 		// Look for <TestRequest> tag
 		if (!testfound)
@@ -93,13 +92,19 @@ void Harness::parseTestXML(std::string path)
 		}
 	}
 
-	file.close();
+	fp.close();
+}
+
+// Add TestedCode object
+void Harness::addTest(TestedCode t)
+{
+	_testDriver->addTest(t);
 }
 
 // Create new TestHarness object
-Harness::Harness(LogLevel logLevel)
+Harness::Harness()
 {
-	_ll = logLevel;
+	_log.write("Created new TestHarness.\n");
 	_testDriver = TestFactory::create();
 }
 
@@ -109,26 +114,28 @@ Harness::~Harness()
 	delete _testDriver;
 }
 
-
 #ifdef TEST_TESTHARNESS
 
 int main()
 {
-	Log log(&cout, log_verbose);
+	//Log log(&cout, log_verbose);
+	Logger& log = StaticLogger<1>::instance();
+	log.attach(&std::cout);
+	log.start();
+	log.write("Testing TestHarness functions.");
 
-	log.logMessage(log_min, "Testing TestHarness functions.");
+	Harness th = Harness();
 
-	Harness th(log_min);
 	th.parseTestXML("");
 
 	bool result = th.execute();
 
 	if (result)
-		log.logMessage(log_min, "Test Passed!");
+		log.write("Test Passed!");
 	else
-		log.logMessage(log_min, "Test Failed.");
+		log.write("Test Failed.");
 
-	log.logMessage(log_min, "End test.");
+	log.write("End test.");
 }
 
 #endif

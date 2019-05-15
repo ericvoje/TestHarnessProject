@@ -36,7 +36,7 @@ namespace Executive
 		bool execute(TestedCode t);
 
 	private:
-		Logger::Log _log;
+		Logging::Logger& _log = Logging::StaticLogger<1>::instance();
 	};
 
 }

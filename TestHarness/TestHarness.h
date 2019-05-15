@@ -40,14 +40,14 @@ namespace TestHarness
 	public:
 		bool execute();
 		void parseTestXML(std::string path);
+		void addTest(Executive::TestedCode t);
 
 		// Constructors
-		Harness(LogLevel logLevel);
+		Harness();
 		~Harness();
 
 	private:
-		Logger::Log _log;
-		LogLevel _ll;
+		Logging::Logger& _log = Logging::StaticLogger<1>::instance();
 		Executive::ITest* _testDriver;
 	};
 }

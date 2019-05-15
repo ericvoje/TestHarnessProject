@@ -36,6 +36,7 @@ namespace Executive
 		virtual int nTests() = 0;
 	}; 
 
+	// Factory that crates abstract ITest objects
 	struct TestFactory
 	{
 		static ITest* create();

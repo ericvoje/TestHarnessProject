@@ -35,7 +35,6 @@ namespace Executive
 		int nTests();
 
 	private:
-		Logger::Log _log;
 		Executor _exe;
 		std::vector<TestedCode> _tests;
 		int _nTests = 0;

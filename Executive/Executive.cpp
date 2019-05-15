@@ -17,13 +17,12 @@
 
 using namespace Executive;
 using namespace TestHarness;
-using namespace Logger;
-using namespace std;
+using namespace Logging;
 
 // Constructor
 Executor::Executor()
 {
-	_log.logMessage(log_verbose, "Executor object created.");
+	_log.write("Executor object created.\n");
 }
 
 // Destructor
@@ -35,33 +34,33 @@ Executor::~Executor()
 bool Executor::execute(TestedCode t)
 {
 	bool funcRet = false;
-
-	_log.logMessage(log_verbose, "Executor execution started.");
+	//_log.write("Executor execution started.\n");
+	Rslt::write("Executor execution started.\n");
 
 	// Run the function within a safe try/catch block
 	try {
-		funcRet = t.func();
+		funcRet = (t.func() == 0);
 
 		if (funcRet == true) {
 			// Test Passed
-			_log.logMessage(log_min, "Test Passed");
+			_log.write("Test Passed");
 			if (!t.passMsg.empty())
-				_log.logMessage(log_med, t.passMsg);
+				_log.write(t.passMsg);
 		}
 		else {
 			// Test Failed
-			_log.logMessage(log_min, "Test  Failed");
+			_log.write("Test  Failed");
 			if (!t.failMsg.empty())
-				_log.logMessage(log_med, t.failMsg);
+				_log.write(t.failMsg);
 		}
 	}
 	catch (const char* msg) {
 		// Caught an exception
 		std::cerr << msg;
-		_log.logMessage(log_min, "Exception Thrown!");
-		_log.logMessage(log_min, "Test Failed");
+		_log.write("Exception Thrown!");
+		_log.write("Test Failed");
 		if (!t.failMsg.empty())
-			_log.logMessage(log_med, t.failMsg);
+			_log.write(t.failMsg);
 	}
 
 	return funcRet;
@@ -88,9 +87,11 @@ bool testfunc3() {
 // Example code
 int main()
 {
-	Log log(&cout, log_verbose);
+	Rslt::attach(&std::cout);
+	Rslt::start();
+	Rslt::write("Testing Execute Package\n");
 
-	log.logMessage(log_min, "Testing Execute functions.");
+	Rslt::flush();
 
 	// Create our TestedCode objects
 	TestedCode t1((int (*)()) testfunc1);
@@ -99,19 +100,27 @@ int main()
 	TestedCode t2((int (*)()) testfunc2);
 	TestedCode t3((int (*)()) testfunc3);
 
-	//Harness th(log_verbose);
+	Harness th = Harness();
 
-	ITest* testDriver = TestFactory::create();
+	th.addTest(t1);
+	th.addTest(t2);
+	th.addTest(t3);
 
-	testDriver->addTest(t1);
-	testDriver->addTest(t2);
-	testDriver->addTest(t3);
-	testDriver->execute();
+	th.execute();
+
+	Rslt::flush();
+
+	//ITest* testDriver = TestFactory::create();
+
+	//testDriver->addTest(t1);
+	//testDriver->addTest(t2);
+	//testDriver->addTest(t3);
+	//testDriver->execute();
 
 	// ToDo: Create TestHarness
 	// Parse TestRequest XML
 	// Execute tests
 
-	log.logMessage(log_min, "End test.");
+	//log.logMessage(log_min, "End test.");
 }
 #endif

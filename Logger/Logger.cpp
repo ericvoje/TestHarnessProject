@@ -1,106 +1,191 @@
 /////////////////////////////////////////////////////////////////////
-// Logger.cpp - print log messages, filtered by log level          //
-// ver 2.0                                                         //
-// Language:    C++, Visual Studio 2019                            //
-// Application: Test Harness - Project 2,                          //
-//              CSE687 - Object Oriented Design                    //
-// Author:      Eric Voje, Kuohsun Tsai                            //
-//              ervoje@syr.edu, kutsai@syr.edu                     //
+// Logger.cpp - log text messages to std::ostream                  //
+// ver 1.2                                                         //
+//-----------------------------------------------------------------//
+// Jim Fawcett (c) copyright 2015                                  //
+// All rights granted provided this copyright notice is retained   //
+//-----------------------------------------------------------------//
+// Language:    C++, Visual Studio 2015                            //
+// Application: Several Projects, CSE687 - Object Oriented Design  //
+// Author:      Jim Fawcett, Syracuse University, CST 4-187        //
+//              jfawcett@twcny.rr.com                              //
 /////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-#include <string>
-#include <chrono> 
-#include <ctime>
-
+#include <functional>
+#include <fstream>
+#include <windows.h>
 #include "Logger.h"
+#include "../Utilities/Utilities.h"
 
-using namespace Logger;
-using namespace std;
+using namespace Logging;
 
-// Returns the LogLevel of our Log instance
-LogLevel Log::getLogLevel()
+//----< send text message to std::ostream >--------------------------
+
+void Logger::write(const std::string& msg)
 {
-	return level;
+  if(_ThreadRunning)
+    _queue.enQ(msg);
 }
-
-// Sets the LogLevel
-void Log::setLogLevel(LogLevel setLevel)
+void Logger::title(const std::string& msg, char underline)
 {
-	// Check that the LogLevel is valid
-	if (setLevel < log_min || setLevel > log_verbose) {
-		level = log_verbose;
-	}
-	// Otherwise set the value to what they wanted
-	level = setLevel;
+  std::string temp = "\n  " + msg + "\n " + std::string(msg.size() + 2, underline);
+  write(temp);
 }
+//----< attach logger to existing std::ostream >---------------------
 
-// Function that only prints log messages that are allowed at our current LogLevel
-void Log::logMessage(LogLevel minLvl, std::string s)
+void Logger::attach(std::ostream* pOut) 
+{ 
+  streams_.push_back(pOut); 
+}
+//----< start logging >----------------------------------------------
+/*
+ *  log to all the attached streams
+ */
+void Logger::start()
 {
-	// Always print timestamp if log_verbose level is set
-	if (level == log_verbose) {
-
-		time_t rawtime;
-		struct tm timeinfo;
-		char buffer[80];
-
-		time(&rawtime);
-		localtime_s(&timeinfo, &rawtime);
-
-		strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S", &timeinfo);
-		std::string str(buffer);
-
-		*_out << "[" << str << "] ";
-	}
-
-	// Only print values that are at or less than
-	// our current LogLevel
-	if (level >= minLvl) {
-		*_out << s << std::endl;
-	}
+  if (_ThreadRunning)
+    return;
+  _ThreadRunning = true;
+  std::function<void()> tp = [=]() {
+    while (true)
+    {
+      std::string msg = _queue.deQ();
+      if (msg == "quit")
+      {
+        _ThreadRunning = false;
+        break;
+      }
+      for (auto pStrm : streams_)
+      {
+        *pStrm << msg;
+      }
+    }
+  };
+  _pThr = new std::thread (tp);
+  //thr.detach();
 }
+//----< has logger been started? >-----------------------------------
 
-// Default Log constructor
-Log::Log()
+bool Logger::running()
 {
-	setLogLevel(log_verbose);
+  return _ThreadRunning;
 }
+//----< suspend logger >---------------------------------------------
 
-// Creates a new Logger with the given LogLevel
-Log::Log(LogLevel logLevel)
+void Logger::pause(bool doPause)
 {
-	setLogLevel(logLevel);
+  if (doPause)
+  {
+    _Paused = true;
+    ::SuspendThread(_pThr->native_handle());
+  }
+  else
+  {
+    _Paused = false;
+    ::ResumeThread(_pThr->native_handle());
+  }
 }
+//----< is logger currently paused? >--------------------------------
 
-// Creates new Log log with given logLevel and output stream
-Log::Log(ostream *fp, LogLevel logLevel)
+bool Logger::paused()
 {
-	setLogLevel(logLevel);
-	setStream(fp);
+  return _Paused;
+}
+//----< wait for logging to empty input queue >----------------------
+
+void Logger::flush()
+{
+  if (_ThreadRunning && !_Paused)
+  {
+    while (_queue.size() > 0)
+      ;
+    for (auto pStream : streams_)
+      pStream->flush();
+  }
+}
+//----< stop logging >-----------------------------------------------
+
+void Logger::stop(const std::string& msg)
+{
+  if (_ThreadRunning)
+  {
+    if(msg != "")
+      write(msg);
+    write("quit");    // request thread to stop
+    if (_pThr->joinable())
+      _pThr->join();  // wait for queue to empty
+
+    _ThreadRunning = false;
+  }
+}
+//----< wait for logger to finish >----------------------------------
+
+void Logger::wait()
+{
+  if (_ThreadRunning && _pThr->joinable())
+    _pThr->join();
+}
+//----< stop logging thread >----------------------------------------
+
+Logger::~Logger()
+{
+  stop();
 }
 
-// Set the output stream of the Log
-void Log::setStream(std::ostream *fp) {
-	_out = fp;
-}
+struct Cosmetic
+{
+  ~Cosmetic() { std::cout << "\n\n"; }
+} cosmetic;
 
 #ifdef TEST_LOGGER
 
-// Main 
+using Util = Utilities::StringHelper;
+
 int main()
 {
+  //Util::Title("Testing Logger Class");
+  Logger log;
+  log.attach(&std::cout);
+  std::ofstream out("logFile.txt");
+  if (out.good())
+    log.attach(&out);
+  else
+    std::cout << "\n  couldn't open logFile for writing";
+  log.write("\n  won't get logged - not started yet");
+  log.start();
+  log.title("Testing Logger Class", '=');
+  log.write("\n  one");
+  log.write("\n  two");
+  log.write("\n  fini");
+  log.stop();
+  log.write("\n  won't get logged - stopped");
+  log.start();
+  log.write("\n  starting again");
+  log.write("\n  and stopping again");
+  log.stop("\n  log terminating now");
+  log.wait();
 
-	Log log(&cout, log_verbose);
+  StaticLogger<1>::attach(&std::cout);
+  StaticLogger<1>::attach(&out);
+  StaticLogger<1>::start();
+  StaticLogger<1>::write("\n");
+  StaticLogger<1>::title("Testing StaticLogger class");
+  StaticLogger<1>::write("\n  static logger at work");
+  Logger& logger = StaticLogger<1>::instance();
+  logger.write("\n  static logger still at work");
 
-	log.logMessage(log_min, "Log Test Beginning.");
+  for(size_t i=0; i<5; ++i)
+    logger.write("\n  a log msg");
+  logger.write("\n  suspending logger");
+  logger.pause(true);
+  for (size_t i = 0; i<5; ++i)
+    logger.write("\n  a log msg written while log suspended");
 
-	log.logMessage(log_verbose, "Verbose log message.");
-
-	log.logMessage(log_min, "Min log message.");
-
-	log.logMessage(log_verbose, "End log test.");
-
+  logger.pause(false);
+  logger.write("\n  a log msg written after log resumed");
+  logger.stop("\n  stopping static logger");
+  logger.wait();
+  out.close();
 }
 
 #endif
