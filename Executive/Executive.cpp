@@ -4,20 +4,23 @@
 // Language:    C++, Visual Studio 2019                            //
 // Application: Test Harness - Project 2,                          //
 //              CSE687 - Object Oriented Design                    //
-// Author:      Eric Voje, Kuohsun Tsai                            //
-//              ervoje@syr.edu, kutsai@syr.edu                     //
+// Author:      Eric Voje, Kuohsun Tsai Chaulladevi Bavda          //
+//              ervoje@syr.edu, kutsai@syr.edu, cvbavda@syr.edu    //
 /////////////////////////////////////////////////////////////////////
 
 #include <iostream>
 #include "Executive.h"
 #include "TestDriver.h"
 #include "ITest.h"
+#include "ClientGUI.h"
 #include "..\Logger\Logger.h"
 #include "..\TestHarness\TestHarness.h"
 
 using namespace Executive;
 using namespace TestHarness;
 using namespace Logging;
+
+
 
 // Constructor
 Executor::Executor()
@@ -65,6 +68,8 @@ bool Executor::execute(TestedCode t)
 
 	return funcRet;
 }
+
+
 
 #ifdef TEST_EXECUTIVE
 
@@ -118,9 +123,26 @@ int main()
 	//testDriver->execute();
 
 	// ToDo: Create TestHarness
+	
 	// Parse TestRequest XML
+	string filename = "TestRequest.xml";
+	string tag = "TestDriver";
+	
+	bool stripTags = true;
+
+	string text = getFile(filename);
+	vector<string> all = getData(text, tag);
+	for (string& s : all)
+	{
+		if (stripTags) stripAllTags(s);
+		cout << s << '\n';
+	}
+
 	// Execute tests
 
 	//log.logMessage(log_min, "End test.");
+
+
+
 }
 #endif

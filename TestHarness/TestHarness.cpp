@@ -21,9 +21,9 @@ using namespace Executive;
 using namespace Logging;
 
 /////////////////////////////////////////////////////////////////////
-//
-//    Harness Function Definitions
-//
+//                                                                 //
+//    Harness Function Definitions                                 // 
+//                                                                 //
 /////////////////////////////////////////////////////////////////////
 
 // Execute any tests held by this harness
