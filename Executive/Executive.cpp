@@ -2,9 +2,9 @@
 // Executive.cpp - executes test functions                         //
 // ver 1.0                                                         //
 // Language:    C++, Visual Studio 2019                            //
-// Application: Test Harness - Project 2,                          //
+// Application: Test Harness - Project 4,                          //
 //              CSE687 - Object Oriented Design                    //
-// Author:      Eric Voje, Kuohsun Tsai Chaulladevi Bavda          //
+// Author:      Eric Voje, Kuohsun Tsai, Chaulladevi Bavda          //
 //              ervoje@syr.edu, kutsai@syr.edu, cvbavda@syr.edu    //
 /////////////////////////////////////////////////////////////////////
 
@@ -12,10 +12,10 @@
 #include "Executive.h"
 #include "TestDriver.h"
 #include "ITest.h"
-#include "ClientGUI.h"
 #include "..\Logger\Logger.h"
 #include "..\TestHarness\TestHarness.h"
 #include "..\FileSystem\FileSystem.h"
+#include <Windows.h>
 
 using namespace Executive;
 using namespace TestHarness;
@@ -70,7 +70,65 @@ bool Executor::execute(TestedCode t)
 	return funcRet;
 }
 
+std::string getFile(std::string filename)
+{
+	std::string buffer;
+	char c;
 
+	std::ifstream in(filename);
+	if (!in) {
+		std::cout << filename << " File cannot be found";   exit(1);
+	}
+
+	while (in.get(c)) {
+		buffer += c;
+	}
+	in.close();
+
+	return buffer;
+}
+
+std::vector<std::string> getData(const std::string& text, std::string tags)
+{
+	std::vector<std::string> collection;
+	unsigned int position = 0, start;
+
+	while (true)
+	{
+		start = text.find("<" + tags, position);
+		if (start == std::string::npos) {
+			return collection;
+		}
+
+		start = text.find(">", start);
+		start++;
+
+		position = text.find("</" + tags, start);
+		if (position == std::string::npos) {
+			return collection;
+		}
+		collection.push_back(text.substr(start, position - start));
+	}
+}
+
+void stripAllTags(std::string& text)
+{
+	unsigned int start = 0, pos;
+
+	while (start < text.size())
+	{
+		start = text.find("<", start);
+		if (start == std::string::npos) {
+			break;
+		}
+
+		pos = text.find(">", start);
+		if (pos == std::string::npos) {
+			break;
+		}
+		text.erase(start, pos - start + 1);
+	}
+}
 
 #ifdef TEST_EXECUTIVE
 
@@ -126,17 +184,17 @@ int main()
 	// ToDo: Create TestHarness
 	
 	// Parse TestRequest XML
-	string filename = "TestRequest.xml";
-	string tag = "TestDriver";
+	std::string filename = "TestRequest.xml";
+	std::string tag = "TestDriver";
 	
 	bool stripTags = true;
 
-	string text = getFile(filename);
-	vector<string> all = getData(text, tag);
-	for (string& s : all)
+	std::string text = getFile(filename);
+	std::vector<std::string> all = getData(text, tag);
+	for (std::string& s : all)
 	{
 		if (stripTags) stripAllTags(s);
-		cout << s << '\n';
+		std::cout << s << '\n';
 	}
 
 	// Execute tests
@@ -144,8 +202,23 @@ int main()
 	//log.logMessage(log_min, "End test.");
 
 	//Test GUI
+	/*
 	Application^ appGUI = gcnew Application();
 	appGUI->Run(gcnew testingWindow::TestingWindow());
+	*/
+	
+	//DLL
+	/*
+	HMODULE dll = LoadDllLibrary(L".dll");
+	if (NULL != dll) {
+		GetProcAddress(dll, L".dll");
 
+		std::cout << "\n failed to load TestMe.dll\n\n";
+		
+	}
+	else {
+		std::cout << " cannot load the dll fie";
+	}
+	*/
 }
 #endif
