@@ -15,6 +15,7 @@
 #include "ClientGUI.h"
 #include "..\Logger\Logger.h"
 #include "..\TestHarness\TestHarness.h"
+#include "..\FileSystem\FileSystem.h"
 
 using namespace Executive;
 using namespace TestHarness;
@@ -142,7 +143,9 @@ int main()
 
 	//log.logMessage(log_min, "End test.");
 
-
+	//Test GUI
+	Application^ appGUI = gcnew Application();
+	appGUI->Run(gcnew testingWindow::TestingWindow());
 
 }
 #endif
