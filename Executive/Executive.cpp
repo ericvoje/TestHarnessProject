@@ -16,6 +16,8 @@
 #include "..\TestHarness\TestHarness.h"
 #include "..\FileSystem\FileSystem.h"
 #include <Windows.h>
+#include "../../FirstDLL/MathLibrary.h"
+
 
 using namespace Executive;
 using namespace TestHarness;
@@ -151,6 +153,8 @@ bool testfunc3() {
 // Example code
 int main()
 {
+	std::cout << " The Test result " << std::endl;
+	
 	Rslt::attach(&std::cout);
 	Rslt::start();
 	Rslt::write("Testing Execute Package\n");
@@ -219,6 +223,9 @@ int main()
 	else {
 		std::cout << " cannot load the dll fie";
 	}
+
+	
+	
 	
 }
 #endif
