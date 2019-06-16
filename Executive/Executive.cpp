@@ -208,10 +208,10 @@ int main()
 	*/
 	
 	//DLL
-	/*
-	HMODULE dll = LoadDllLibrary(L".dll");
+	
+	HMODULE dll = LoadLibrary(L".dll");
 	if (NULL != dll) {
-		GetProcAddress(dll, L".dll");
+		//GetProcAddress(dll, L".dll");
 
 		std::cout << "\n failed to load TestMe.dll\n\n";
 		
@@ -219,6 +219,6 @@ int main()
 	else {
 		std::cout << " cannot load the dll fie";
 	}
-	*/
+	
 }
 #endif
