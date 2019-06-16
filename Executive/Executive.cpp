@@ -16,7 +16,12 @@
 #include "..\TestHarness\TestHarness.h"
 #include "..\FileSystem\FileSystem.h"
 #include <Windows.h>
-#include "../../FirstDLL/MathLibrary.h"
+#include "..\FirstDLL\MathLibrary.h"
+
+
+#include "..\FirstDLL\MyClassOne.h" 
+#include "..\FirstDLL\MyClassTwo.h" 
+using namespace MyDLL;
 
 
 using namespace Executive;
@@ -160,6 +165,19 @@ int main()
 	Rslt::write("Testing Execute Package\n");
 
 	Rslt::flush();
+
+	//Test DLL
+	std::cout << "Hello C++ Win32 DLL" << std::endl;
+
+	MyClassOne sc1;
+	std::cout << "default value of variable from dll : " << sc1.Getvar() << std::endl;
+	sc1.Setvar(101);
+	std::cout << "value of variable from dll : " << sc1.Getvar() << std::endl;
+
+	MyClassTwo sc2;
+	std::cout << "default value of variable from dll : " << sc2.Getvar() << std::endl;
+	sc2.Setvar(200);
+	std::cout << "value of variable from dll : " << sc2.Getvar() << std::endl;
 
 	// Create our TestedCode objects
 	TestedCode t1((int (*)()) testfunc1);
