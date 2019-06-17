@@ -19,12 +19,13 @@
 #include <functional>
 #include <exception>
 #include "../Utilities/Utilities.h"
+#include "../Logger/Logger.h"
 
 using namespace Sockets;
 using Util = Utilities::StringHelper;
 template<typename T>
 using Conv = Utilities::Converter<T>;
-using Show = StaticLogger<1>;
+using Show = Logging::StaticLogger<1>;
 
 /////////////////////////////////////////////////////////////////////////////
 // SocketSystem class members
@@ -448,7 +449,7 @@ bool SocketListener::bind()
   // Resolve the server address and port
 
   size_t uport = ::htons((u_short)port_);
-  StaticLogger<1>::write("\n  -- netstat uport = " + Utilities::Converter<size_t>::toString(uport));
+  Logging::StaticLogger<1>::write("\n  -- netstat uport = " + Utilities::Converter<size_t>::toString(uport));
   std::string sPort = Conv<size_t>::toString(uport);
   iResult = getaddrinfo(NULL, sPort.c_str(), &hints, &result);
   if (iResult != 0) {
