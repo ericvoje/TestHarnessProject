@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "MyClassTwo.h"
 
 namespace MyDLL

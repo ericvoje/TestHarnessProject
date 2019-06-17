@@ -167,17 +167,18 @@ int main()
 	Rslt::flush();
 
 	//Test DLL
-	std::cout << "Hello C++ Win32 DLL" << std::endl;
+	std::cout << "Test DLL" << std::endl;
 
 	MyClassOne sc1;
 	std::cout << "default value of variable from dll : " << sc1.Getvar() << std::endl;
-	sc1.Setvar(101);
+	sc1.Setvar(88);
 	std::cout << "value of variable from dll : " << sc1.Getvar() << std::endl;
 
 	MyClassTwo sc2;
 	std::cout << "default value of variable from dll : " << sc2.Getvar() << std::endl;
 	sc2.Setvar(200);
 	std::cout << "value of variable from dll : " << sc2.Getvar() << std::endl;
+	
 
 	// Create our TestedCode objects
 	TestedCode t1((int (*)()) testfunc1);
@@ -230,7 +231,7 @@ int main()
 	*/
 	
 	//DLL
-	
+	/*
 	HMODULE dll = LoadLibrary(L".dll");
 	if (NULL != dll) {
 		//GetProcAddress(dll, L".dll");
@@ -241,8 +242,11 @@ int main()
 	else {
 		std::cout << " cannot load the dll fie";
 	}
-
+	*/
 	
+	
+	std::cin.get();
+	return 0;
 	
 	
 }

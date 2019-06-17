@@ -19,6 +19,8 @@
 
 using namespace Logging;
 
+
+
 //----< send text message to std::ostream >--------------------------
 
 void Logger::write(const std::string& msg)

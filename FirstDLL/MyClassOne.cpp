@@ -1,4 +1,4 @@
-
+#include "pch.h"
 #include "MyClassOne.h"
 
 namespace MyDLL

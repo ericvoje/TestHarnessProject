@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathLibrary.cpp" />
     <ClCompile Include="MyClassOne.cpp" />
     <ClCompile Include="MyClassTwo.cpp" />
