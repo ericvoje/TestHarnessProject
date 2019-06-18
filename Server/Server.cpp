@@ -14,6 +14,7 @@
 #include <functional>
 #include "../Logger/Logger.h"
 #include "../Cpp11-BlockingQueue/Cpp11-BlockingQueue.h"
+#include "../HttpMessage/HttpMessage.h"
 
 using Show = Logging::StaticLogger<1>;
 using namespace Utilities;
@@ -23,8 +24,7 @@ void Server::ServerSender()
 {
 	try
 	{
-		SocketConnecter si;
-		Sender send(this->addr, this->port);
+		
 
 		HttpMessageFunc popValue;
 		BlockingQueue<HttpMessageFunc>& q1 = StaticBlockingQueue<HttpMessageFunc, 1>().getQueue();
@@ -41,9 +41,9 @@ void Server::ServerSender()
 	}
 	catch (std::exception& exc)
 	{
-		
-		std::string exMsg = "\n  " + std::string(exc.what()) + "\n\n";
-		
+		Show::write("\n  Exception caught: ");
+		std::string exMsg = "\n  " + std::string(exc.what()) + "\n";
+		Show::write(exMsg);
 	}
 }
 
