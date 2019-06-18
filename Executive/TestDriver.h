@@ -19,6 +19,8 @@
 #include "Executive.h"
 #include "..\Logger\Logger.h"
 
+#define NTHREADS 1
+
 namespace Executive
 {
 
@@ -28,15 +30,23 @@ namespace Executive
 	{
 	public:
 		TestDriver();
-		~TestDriver() {}
+		~TestDriver()
+		{
+			stop();
+		}
 
 		void addTest(TestedCode t);
+		void start();
+		void stop();
 		bool execute();
 		int nTests();
 
 	private:
 		Executor _exe;
-		std::vector<TestedCode> _tests;
+		std::thread _th[NTHREADS];
+		bool _running[NTHREADS];
+		//std::vector<TestedCode> _tests;
+		Async::BlockingQueue<TestedCode> _bq = Async::BlockingQueue<TestedCode>();
 		int _nTests = 0;
 	};
 

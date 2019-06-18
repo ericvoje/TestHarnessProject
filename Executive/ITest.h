@@ -13,7 +13,7 @@
 namespace Executive
 {
 	// Class that holds individual test functions
-	struct TestedCode {
+	class TestedCode {
 	public:
 		TestedCode(int (*func)())
 		{

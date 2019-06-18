@@ -24,6 +24,7 @@
 
 #include "ITest.h"
 #include "..\Logger\Logger.h"
+#include "../Cpp11-BlockingQueue/Cpp11-BlockingQueue.h"
 
 namespace Executive
 {
